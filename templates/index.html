@@ -1,24 +1,20 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Current weather lookup</title>
+<style>
+:root{font-family:system-ui,sans-serif;color:#172d34;background:#edf3f4}*{box-sizing:border-box}body{margin:0;padding:32px 18px}main{max-width:600px;margin:8vh auto;background:#fff;padding:34px;border-radius:20px;box-shadow:0 12px 40px #102d3510}h1{font-size:30px;margin:0 0 12px}.muted{color:#557079;line-height:1.65}label{display:block;font-weight:600;margin:22px 0 7px}input,select,button{font:inherit;padding:12px;border-radius:8px;width:100%;border:1px solid #bdcfd3}button{background:#195c66;color:white;border:0;margin-top:24px;cursor:pointer}button:hover{background:#124851}.notice{padding:16px;border-radius:10px;background:#fff3dd;margin-top:24px;line-height:1.5}.result{padding:22px;background:#e9f4ef;border-radius:12px;margin-top:26px}.temperature{font-size:42px;margin:8px 0}.result h2{font-size:20px;margin:0}footer{font-size:12px;margin-top:26px;color:#557079;line-height:1.6}
+</style>
 </head>
-<body>
-    <title>Search Page</title>
-    <div class="content">
-        <h1 style="text-align: center">Search</h1>
-   
-        <div class="form">
-            <form action="/weatherapp" method="POST">
-                <label for='city'>enter city: <label>
-                <input type="text" name="city" id="city">
-
-                <label for='units'>Enter Units: <label>
-                <input type="text" name="units" id="units">
-                <label for='appid'>Enter your API KEY: <label>
-                <input type="text" name="appid" id="appid">
-                <input type="submit" value="Search">
-            </form>
-        </div>
-    </div>
-</body>
-</html>
+<body><main>
+<h1>Current weather</h1>
+<p class="muted">Look up a city's current conditions. This is a learning app, not a forecast or a source for emergency decisions.</p>
+<form action="/weatherapp" method="post">
+<label for="city">City</label><input id="city" name="city" maxlength="100" required placeholder="Example: London,GB" value="{{ city }}" autocomplete="off">
+<label for="units">Units</label><select id="units" name="units"><option value="metric" {% if units == 'metric' %}selected{% endif %}>Celsius</option><option value="imperial" {% if units == 'imperial' %}selected{% endif %}>Fahrenheit</option><option value="standard" {% if units == 'standard' %}selected{% endif %}>Kelvin</option></select>
+<button type="submit">Look up current weather</button></form>
+{% if error %}<div class="notice" role="alert">{{ error }}</div>{% endif %}
+{% if weather %}<section class="result" aria-live="polite"><h2>{{ weather.name }}{% if weather.country %}, {{ weather.country }}{% endif %}</h2><p class="temperature">{{ weather.temperature }} {{ weather.unit }}</p><p>{{ weather.description }}</p><p class="muted">Reported by OpenWeather. A current-condition response is not proof of conditions at your exact location.</p></section>{% endif %}
+<footer>No API key belongs in this form. The server owner configures it privately. Submitted city names are sent to OpenWeather when the service is configured. This app does not save lookup history.</footer>
+</main></body></html>
